@@ -1,0 +1,27 @@
+{
+  "name": "youtube_clone",
+  "version": "1.0.0",
+  "description": "The good way to watch videos",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kim-HyunSeo/wetube-reloaded.git"
+  },
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/server.js"
+  },
+  "author": "Kim Hyunseo<khs050305@naver.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kim-HyunSeo/wetube-reloaded/issues"
+  },
+  "homepage": "https://github.com/Kim-HyunSeo/wetube-reloaded#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.7",
+    "nodemon": "^2.0.7"
+  }
+}
