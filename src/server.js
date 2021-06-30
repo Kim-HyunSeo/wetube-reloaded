@@ -5,7 +5,18 @@ const PORT = 8080;
 
 const app = express();
 
-const handleListening = () =>
-    console.log(`Server listening on port http://localhost:${PORT} 🚀`)
+const logger = (req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+};
 
-app.listen(PORT, handleListening)
+const handleHome = (req, res) => {
+    return res.send("Middlewares");
+};
+
+app.get("/", logger, handleHome);
+
+const handleListening = () =>
+    console.log(`Server listening on port http://localhost:${PORT} 🚀`);
+
+app.listen(PORT, handleListening);
