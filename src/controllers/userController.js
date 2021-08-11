@@ -49,7 +49,8 @@ export const postJoin = async (req, res) => {
         })
     }
 };
-export const getLogin = (req, res) => res.render("login", { pageTitle: "Login" });
+export const getLogin = (req, res) =>
+    res.render("login", { pageTitle: "Login" });
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login"
@@ -71,6 +72,35 @@ export const postLogin = async (req, res) => {
     req.session.user = user;
     return res.redirect("/");
 };
-// export const join = (req, res) => res.send("Join")
-// export const join = (req, res) => res.send("Join")
-// export const join = (req, res) => res.send("Join")
+export const logout = (req, res) => { };
+export const getEdit = (req, res) => {
+    return res.render("edit-profile", { pageTitle: "Edit Profile" });
+};
+export const postEdit = async (req, res) => {
+    const {
+        session: {
+            user: { _id, avatarUrl },
+        },
+        body: { name, email, username, location },
+        file,
+    } = req;
+    const updatedUser = await User.findByIdAndUpdate(
+        _id,
+        {
+            avatarUrl: file ? file.path : avatarUrl,
+            name,
+            email,
+            username,
+            location,
+        },
+        { new: true }
+    );
+    req.session.user = updatedUser;
+    return res.redirect("/user/edit");
+};
+export const getPassword = (req, res) => {
+    return res.render("user/change-password", { pageTitle: "Change Password" });
+};
+export const postPassword = (req, res) => {
+    res.redirect("/");
+};
