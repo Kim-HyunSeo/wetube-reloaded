@@ -24,4 +24,4 @@ export const publicMiddleware = (req, res, next) => {
     }
 };
 
-export const uploadFile = multer({ dest: "uploads/" })
+export const uploadFile = multer({ dest: "uploads/" });
