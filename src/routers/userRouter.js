@@ -6,7 +6,7 @@ import {
     postPassword,
 } from "../controllers/userController";
 import {
-    uploadFile,
+    uploadAvatar,
     protectorMiddleware,
 } from "../middlewares";
 
@@ -17,7 +17,7 @@ userRouter
     .route("/edit")
     .all(protectorMiddleware)
     .get(getEdit)
-    .post(uploadFile.single("avatar"), postEdit);
+    .post(uploadAvatar.single("avatar"), postEdit);
 userRouter
     .route("/change-password")
     .all(protectorMiddleware)
