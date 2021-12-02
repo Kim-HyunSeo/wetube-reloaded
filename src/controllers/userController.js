@@ -74,7 +74,9 @@ export const postLogin = async (req, res) => {
 };
 export const logout = (req, res) => { };
 export const getEdit = (req, res) => {
-    return res.render("edit-profile", { pageTitle: "Edit Profile" });
+    return res.render("edit-profile", {
+        pageTitle: "Edit Profile"
+    });
 };
 export const postEdit = async (req, res) => {
     const {
@@ -99,7 +101,9 @@ export const postEdit = async (req, res) => {
     return res.redirect("/user/edit");
 };
 export const getPassword = (req, res) => {
-    return res.render("user/change-password", { pageTitle: "Change Password" });
+    return res.render("user/change-password", {
+        pageTitle: "Change Password"
+    });
 };
 export const postPassword = async (req, res) => {
     const {
@@ -127,4 +131,18 @@ export const postPassword = async (req, res) => {
     req.session.user.password = user.password;
     // send notification
     return res.redirect("/user/logout");
+};
+
+export const see = async (req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+        return res.status(404).render("404", {
+            pageTitle: "User not Found"
+        });
+    };
+    return res.render("user/profile", {
+        pageTitle: `${user.name}의 Profile`,
+        user,
+    });
 };

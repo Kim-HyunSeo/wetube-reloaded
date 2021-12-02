@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    see,
     getEdit,
     postEdit,
     getPassword,
@@ -23,5 +24,6 @@ userRouter
     .all(protectorMiddleware)
     .get(getPassword)
     .post(postPassword);
+userRouter.get("/:id", see);
 
 export default userRouter
