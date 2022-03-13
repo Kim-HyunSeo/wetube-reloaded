@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    watch,
+    watch, //
     getUpload,
     postUpload,
     getEdit,
@@ -8,28 +8,28 @@ import {
     deleteVideo,
 } from "../controllers/videoController";
 import {
-    uploadVideo,
-    protectorMiddleware
+    uploadVideo, //
+    protectorMiddleware,
 } from "../middlewares";
 
 const videoRouter = express.Router();
 
-videoRouter
+// mongoose make 24digits hexadecimal id
+videoRouter //
     .get("/:id([0-9a-f]{24})", watch);
-videoRouter
+videoRouter //
     .route("/:id([0-9a-f]{24})/edit")
     .all(protectorMiddleware)
     .get(getEdit)
     .post(postEdit);
-videoRouter
-    // mongoose make 24digits hexadecimal id
+videoRouter //
     .route("/:id([0-9a-f]{24})/delete")
     .all(protectorMiddleware)
     .get(deleteVideo);
-videoRouter
+videoRouter //
     .route("/upload")
     .all(protectorMiddleware)
     .get(getUpload)
     .post(uploadVideo.single("video"), postUpload);
 
-export default videoRouter
+export default videoRouter;

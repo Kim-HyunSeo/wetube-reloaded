@@ -6,11 +6,11 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.loggedInUser = req.session.user || {};
     console.log(res.locals);
     next();
-}
+};
 
 export const protectorMiddleware = (req, res, next) => {
     if (req.session.loggedIn) {
-        next()
+        next();
     } else {
         return res.redirect("/login");
     }
@@ -18,20 +18,22 @@ export const protectorMiddleware = (req, res, next) => {
 
 export const publicMiddleware = (req, res, next) => {
     if (!req.session.loggedIn) {
-        next()
+        next();
     } else {
         return res.redirect("/");
     }
 };
 
 export const uploadAvatar = multer({
-    dest: "uploads/avatars", limits: {
-        fileSize:10000000,
-    }
+    dest: "uploads/avatars",
+    limits: {
+        fileSize: 10000000,
+    },
 });
 
 export const uploadVideo = multer({
-    dest: "uploads/videos", limits: {
-        fileSize:10000000000,
-    }
+    dest: "uploads/videos",
+    limits: {
+        fileSize: 10000000000,
+    },
 });

@@ -1,29 +1,30 @@
 import express from "express";
 import {
-    see,
+    see, //
     getEdit,
     postEdit,
     getPassword,
     postPassword,
 } from "../controllers/userController";
 import {
-    uploadAvatar,
+    uploadAvatar, //
     protectorMiddleware,
 } from "../middlewares";
 
 const userRouter = express.Router();
 
-// userRouter.get("/logout", protectorMiddleware, logout)
-userRouter
+userRouter //
     .route("/edit")
     .all(protectorMiddleware)
     .get(getEdit)
     .post(uploadAvatar.single("avatar"), postEdit);
-userRouter
+userRouter //
     .route("/change-password")
     .all(protectorMiddleware)
     .get(getPassword)
     .post(postPassword);
-userRouter.get("/:id", see);
+userRouter //
+    .get("/:id", see);
+// userRouter.get("/logout", protectorMiddleware, logout)
 
-export default userRouter
+export default userRouter;

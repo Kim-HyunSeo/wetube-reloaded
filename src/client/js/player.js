@@ -29,7 +29,7 @@ const handleMute = (e) => {
 
 const handleVolumeChange = (event) => {
     const {
-        target: { value }
+        target: { value },
     } = event;
     if (video.muted) {
         video.muted = false;
@@ -39,8 +39,7 @@ const handleVolumeChange = (event) => {
     video.volume = value;
 };
 
-const formatTime = (seconds) =>
-    new Date(seconds * 1000).toISOString().substr(11, 8);
+const formatTime = (seconds) => new Date(seconds * 1000).toISOString().substr(11, 8);
 
 const handleLoadedMetadata = () => {
     totalTime.innerText = formatTime(Math.floor(video.duration));
@@ -54,4 +53,4 @@ playBtn.addEventListener("click", handlePlay);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
-video.addEventListener("timeupdate", handleTimeUpdate)
+video.addEventListener("timeupdate", handleTimeUpdate);
