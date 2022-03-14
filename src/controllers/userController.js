@@ -38,7 +38,7 @@ export const postJoin = async (req, res) => {
             name,
             username,
             email,
-            password,
+            password: bcrypt.hash(password, 5),
             location,
         });
         return res.redirect("/login", pageTitle);
@@ -134,16 +134,16 @@ export const postPassword = async (req, res) => {
 
 export const see = async (req, res) => {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("videos");
     if (!user) {
         return res.status(404).render("404", {
             pageTitle: "User not Found",
         });
     }
+    console.log(user);
     const videos = await Video.find({ owner: user.id });
     return res.render("user/profile", {
         pageTitle: `${user.name}'s Profile`,
         user,
-        videos,
     });
 };

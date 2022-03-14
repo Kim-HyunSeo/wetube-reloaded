@@ -10,11 +10,12 @@ const UserSchema = new Schema({
     password: { type: String, required: true },
     name: { type: String, required: true },
     location: String,
-});
-
-UserSchema.pre("save", async () => {
-    this.password = await bcrypt.hash(this.password, 5);
-    console.log(this.password);
+    videos: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Video",
+        },
+    ],
 });
 
 const User = mongoose.model("User", UserSchema);
