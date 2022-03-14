@@ -7,7 +7,7 @@ module.exports = {
     output: {
         filename: "main.js",
         // __dirname: JS에서 제공하는 폴더까지의 절대 경로
-        path: path.resolve(__dirname, "statics", "js"),
+        path: path.resolve(__dirname, "assets", "js"),
     },
     module: {
         rules: [
