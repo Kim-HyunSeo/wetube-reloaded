@@ -6,43 +6,35 @@ export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 export const postJoin = async (req, res) => {
     const { name, username, email, password, password2, location } = req.body;
     const pageTitle = "Join";
+    console.log({ name, username, email, password, password2, location });
     if (password !== password2) {
         return res.status(400).render("join", {
             pageTitle,
             errorMessage: "Password confirmation does not match.",
         });
     }
-    const exists = await User.exists({ $or: [{ username }, { email }] });
-    if (exists) {
+    const usernameExists = await User.exists({ username });
+    if (usernameExists) {
+        return res.render("join", { pageTitle, errorMessage: "This username is already taken." });
+    }
+    const emailExists = await User.exists({ email });
+    if (emailExists) {
         return res.status(400).render("join", {
             pageTitle,
-            errorMessage: "This username/email is already taken.",
+            errorMessage: "This email is already taken.",
         });
     }
-    // const usernameExists = await User.exists({ username });
-    // if (usernameExists) {
-    //     return res.render("join", {
-    //         pageTitle,
-    //         errorMessage: "This username is already taken."
-    //     });
-    // }
-    // const emailExists = await User.exists({ email });
-    // if (emailExists) {
-    //     return res.render("join", {
-    //         pageTitle,
-    //         errorMessage: "This email is already taken."
-    //     })
-    // }
     try {
         await User.create({
             name,
             username,
             email,
-            password: bcrypt.hash(password, 5),
+            password,
             location,
         });
-        return res.redirect("/login", pageTitle);
+        return res.redirect("/login");
     } catch (error) {
+        console.log(error);
         return res.status(400).render("join", {
             pageTitle,
             errorMessage: error._message,
@@ -69,7 +61,7 @@ export const postLogin = async (req, res) => {
     }
     req.session.loggedIn = true;
     req.session.user = user;
-    return res.redirect("/");
+    return res.redirect("/login");
 };
 export const logout = (req, res) => {};
 export const getEdit = (req, res) => {
@@ -100,7 +92,7 @@ export const postEdit = async (req, res) => {
     return res.redirect("/user/edit");
 };
 export const getPassword = (req, res) => {
-    return res.render("user/change-password", {
+    return res.status(200).render("user/change-password", {
         pageTitle: "Change Password",
     });
 };
