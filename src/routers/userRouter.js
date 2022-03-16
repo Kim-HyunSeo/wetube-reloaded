@@ -5,6 +5,8 @@ import {
     postEdit,
     getPassword,
     postPassword,
+    githubLogin,
+    githubCallback,
 } from "../controllers/userController";
 import {
     uploadAvatar, //
@@ -23,8 +25,9 @@ userRouter //
     .all(protectorMiddleware)
     .get(getPassword)
     .post(postPassword);
-userRouter //
-    .get("/:id", see);
+userRouter.get("/:id", see);
+userRouter.get("/github", githubLogin);
+userRouter.get("/github/callback", githubCallback);
 // userRouter.get("/logout", protectorMiddleware, logout)
 
 export default userRouter;

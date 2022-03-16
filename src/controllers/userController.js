@@ -139,3 +139,17 @@ export const see = async (req, res) => {
         user,
     });
 };
+
+export const githubLogin = async (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/authorize";
+    const config = {
+        client_id: "d4a3ec44038eaa24d963",
+        allow_signup: "false",
+        scope: "read:user user:email",
+    };
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}?${params}`;
+    return res.redirect(finalUrl);
+};
+
+export const githubCallback = (req, res) => {};
