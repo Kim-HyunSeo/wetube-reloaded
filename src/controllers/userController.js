@@ -85,7 +85,7 @@ export const postEdit = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
         _id,
         {
-            avatarUrl: file ? file.path : avatarUrl,
+            avatarUrl: file.location,
             name,
             email,
             username,
@@ -94,7 +94,8 @@ export const postEdit = async (req, res) => {
         { new: true },
     );
     req.session.user = updatedUser;
-    return res.redirect("/user/edit");
+    console.log(req.file);
+    return res.redirect("/users/edit");
 };
 
 export const getPassword = (req, res) => {
