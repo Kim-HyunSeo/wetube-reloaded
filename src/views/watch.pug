@@ -1,7 +1,7 @@
 extends base
 
 block content
-    video(controls src=`/${video.fileUrl}`)
+    video(controls src=`/${video.fileUrl}` id="video" data-id=video._id)
     div
         p=video.description
         small=video.createdAt
@@ -12,3 +12,10 @@ block content
         a(href=`${video.id}/edit`) Edit Video &rarr;
         br
         a(href=`${video.id}/delete`) Delete Video &rarr;
+    script.
+        const video = document.getElementById("video");
+        const endedHandler = () => {
+            const { id } = video.dataset;
+            fetch(`/api/videos/${id}/views`);
+        };
+        video.addEventListener("ended", () => endedHandler);
