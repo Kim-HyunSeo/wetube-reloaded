@@ -40,9 +40,29 @@ export const uploadAvatar = multer({
     },
     storage: multerS3({
         s3: s3,
-        bucket: "clone-wetube-node",
+        bucket: "clone-wetube-node/images",
+        acl: "public-read",
     }),
 });
+
+export const s3DeleteAvatar = (req, res, next) => {
+    if (!req.file) {
+        next();
+    }
+    s3.deleteObject(
+        {
+            Bucket: `clonetubetest`,
+            Key: `images/${req.session.user.avatarURL.split("/")[4]}`,
+        },
+        (err, data) => {
+            if (err) {
+                throw err;
+            }
+            console.log(`s3 deleteObject`, data);
+        },
+    );
+    next();
+};
 
 export const uploadVideo = multer({
     dest: "uploads/videos",
