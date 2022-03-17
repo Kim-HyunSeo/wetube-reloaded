@@ -9,9 +9,7 @@ export const home = async (req, res) => {
 export const watch = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id).populate("owner");
-    if (!video) {
-        return res.status(404).render("404", { pageTitle: "Video not found" });
-    }
+    if (!video) return res.status(404).render("404", { pageTitle: "Video not found" });
     return res.render("watch", { pageTitle: video.title, video });
 };
 
@@ -46,13 +44,9 @@ export const postUpload = async (req, res) => {
 export const getEdit = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id);
-    if (!video) {
-        return res.status(404).render("404", { pageTitle: "Video not found" });
-    }
-    // type도 비교하기 때문에
-    if (String(video.owner) !== req.session.user._id) {
-        return res.status(403).redirect("/");
-    }
+    if (!video) return res.status(404).render("404", { pageTitle: "Video not found" });
+    // JS !==는 type도 비교함. video.owner는 ObjectId type
+    if (String(video.owner) !== req.session.user._id) return res.status(403).redirect("/");
     return res.render("edit", { pageTitle: `Edit: ${video.title}`, video });
 };
 
@@ -60,12 +54,8 @@ export const postEdit = async (req, res) => {
     const { id } = req.params;
     const { title, description, hashtags } = req.body;
     const video = await Video.findById(id);
-    if (!video) {
-        return res.status(404).render("404", { pageTitle: "Video not found" });
-    }
-    if (String(video.owner) !== req.session.user._id) {
-        return res.status(403).redirect("/");
-    }
+    if (!video) return res.status(404).render("404", { pageTitle: "Video not found" });
+    if (String(video.owner) !== req.session.user._id) return res.status(403).redirect("/");
     await Video.findByIdAndUpdate(id, {
         title,
         description,
@@ -77,12 +67,8 @@ export const postEdit = async (req, res) => {
 export const deleteVideo = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id);
-    if (!video) {
-        return res.status(404).render("404", { pageTitle: "Video not found" });
-    }
-    if (String(video.owner) !== req.session.user._id) {
-        return res.status(403).redirect("/");
-    }
+    if (!video) return res.status(404).render("404", { pageTitle: "Video not found" });
+    if (String(video.owner) !== req.session.user._id) return res.status(403).redirect("/");
     await Video.findByIdAndDelete(id);
     return res.redirect("/");
 };
