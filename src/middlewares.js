@@ -36,7 +36,8 @@ export const publicMiddleware = (req, res, next) => {
 export const uploadAvatar = multer({
     dest: "uploads/avatars",
     limits: {
-        fileSize: 10000000,
+        // 2 MB
+        fileSize: 2000000,
     },
     storage: multerS3({
         s3: s3,
@@ -45,20 +46,16 @@ export const uploadAvatar = multer({
     }),
 });
 
-export const s3DeleteAvatar = (req, res, next) => {
-    if (!req.file) {
-        next();
-    }
+export const deleteAvatar = (req, res, next) => {
+    if (!req.file) next();
     s3.deleteObject(
         {
-            Bucket: `clonetubetest`,
-            Key: `images/${req.session.user.avatarURL.split("/")[4]}`,
+            bucket: "clone-wetube-node/images",
+            key: `images/${req.session.user.avatarURL.split("/")[4]}`,
         },
         (err, data) => {
-            if (err) {
-                throw err;
-            }
-            console.log(`s3 deleteObject`, data);
+            if (err) throw err;
+            console.log(`${data}: deleted in AWS S3`);
         },
     );
     next();
@@ -67,6 +64,7 @@ export const s3DeleteAvatar = (req, res, next) => {
 export const uploadVideo = multer({
     dest: "uploads/videos",
     limits: {
-        fileSize: 10000000000,
+        // 20 MB
+        fileSize: 20000000,
     },
 });

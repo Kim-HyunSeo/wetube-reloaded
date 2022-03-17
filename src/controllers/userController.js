@@ -6,9 +6,9 @@ import Video from "../models/video";
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 
 export const postJoin = async (req, res) => {
-    const { name, username, email, password, password2, location } = req.body;
     const pageTitle = "Join";
-    console.log({ name, username, email, password, password2, location });
+    const { name, username, email, password, password2, location } = req.body;
+    const { file } = req;
     if (password !== password2) {
         return res.status(400).render("join", {
             pageTitle,
@@ -75,17 +75,14 @@ export const getEdit = (req, res) => {
 };
 
 export const postEdit = async (req, res) => {
-    const {
-        session: {
-            user: { _id, avatarUrl },
-        },
-        body: { name, email, username, location },
-        file,
-    } = req;
+    const { _id, avatarUrl } = req.session.user;
+    const { name, email, username, location } = req.body;
+    const { file } = req;
+    console.log(file);
     const updatedUser = await User.findByIdAndUpdate(
         _id,
         {
-            avatarUrl: file.location,
+            avatarUrl: !file ? avatarUrl : file.location,
             name,
             email,
             username,
