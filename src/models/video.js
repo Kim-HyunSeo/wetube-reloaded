@@ -8,8 +8,8 @@ const VideoSchema = new mongoose.Schema(
         description: { type: String, required: true, trim: true, maxLength: 200 },
         hashtags: [{ type: String, trim: true }],
         meta: {
-            view: { type: Number, default: 0, required: true },
-            rating: { type: Number, default: 0, required: true },
+            views: { type: Number, default: 0, required: true },
+            ratings: { type: Number, default: 0, required: true },
         },
         owner: {
             type: Schema.Types.ObjectId,
