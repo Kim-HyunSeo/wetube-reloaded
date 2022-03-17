@@ -143,7 +143,7 @@ export const see = async (req, res) => {
 export const githubLogin = async (req, res) => {
     const baseUrl = "https://github.com/login/oauth/authorize";
     const config = {
-        client_id: "d4a3ec44038eaa24d963",
+        client_id: process.env.GITHUB_CLIENT,
         allow_signup: "false",
         scope: "read:user user:email",
     };
@@ -152,4 +152,21 @@ export const githubLogin = async (req, res) => {
     return res.redirect(finalUrl);
 };
 
-export const githubCallback = (req, res) => {};
+export const githubCallback = async (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/access_token";
+    const config = {
+        client_id: process.env.GITHUB_CLIENT,
+        client_secret: process.env.GITHUB_SECRET,
+        code: req.query.code,
+    };
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}?${params}`;
+    const data = await fetch(finalUrl, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+        },
+    });
+    const json = await data.json();
+    console.log(json);
+};

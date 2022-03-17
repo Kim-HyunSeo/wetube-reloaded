@@ -25,9 +25,9 @@ userRouter //
     .all(protectorMiddleware)
     .get(getPassword)
     .post(postPassword);
-userRouter.get("/:id", see);
 userRouter.get("/github", githubLogin);
 userRouter.get("/github/callback", githubCallback);
+userRouter.get("/:id", see);
 // userRouter.get("/logout", protectorMiddleware, logout)
 
 export default userRouter;
