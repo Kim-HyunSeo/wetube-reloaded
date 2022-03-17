@@ -6,8 +6,10 @@ block content
         p=video.description
         small=video.createdAt
     div
-        small Uploaded by
+        small Uploaded by 
             a(href=`/users/${video.owner._id}`) #{video.owner.name}
+        br
+        small #{video.meta.views} views.
     if String(video.owner._id) === loggedInUser._id
         a(href=`${video.id}/edit`) Edit Video &rarr;
         br
@@ -16,6 +18,8 @@ block content
         const video = document.getElementById("video");
         const endedHandler = () => {
             const { id } = video.dataset;
-            fetch(`/api/videos/${id}/views`);
+            fetch(`/api/videos/${id}/views`, {
+                method: "POST",
+            });
         };
-        video.addEventListener("ended", () => endedHandler);
+        video.addEventListener("ended", endedHandler);
