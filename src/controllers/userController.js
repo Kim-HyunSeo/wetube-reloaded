@@ -1,8 +1,10 @@
 import bcrypt from "bcrypt";
+import fetch from "node-fetch";
 import User from "../models/user";
 import Video from "../models/video";
 
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
+
 export const postJoin = async (req, res) => {
     const { name, username, email, password, password2, location } = req.body;
     const pageTitle = "Join";
@@ -42,6 +44,7 @@ export const postJoin = async (req, res) => {
     }
 };
 export const getLogin = (req, res) => res.render("login", { pageTitle: "Login" });
+
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login";
@@ -64,11 +67,13 @@ export const postLogin = async (req, res) => {
     return res.redirect("/login");
 };
 export const logout = (req, res) => {};
+
 export const getEdit = (req, res) => {
     return res.render("edit-profile", {
         pageTitle: "Edit Profile",
     });
 };
+
 export const postEdit = async (req, res) => {
     const {
         session: {
@@ -91,11 +96,13 @@ export const postEdit = async (req, res) => {
     req.session.user = updatedUser;
     return res.redirect("/user/edit");
 };
+
 export const getPassword = (req, res) => {
     return res.status(200).render("user/change-password", {
         pageTitle: "Change Password",
     });
 };
+
 export const postPassword = async (req, res) => {
     const {
         session: {
@@ -127,11 +134,7 @@ export const postPassword = async (req, res) => {
 export const see = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id).populate("videos");
-    if (!user) {
-        return res.status(404).render("404", {
-            pageTitle: "User not Found",
-        });
-    }
+    if (!user) return res.status(404).render("404", { pageTitle: "User not Found" });
     console.log(user);
     const videos = await Video.find({ owner: user.id });
     return res.render("user/profile", {
@@ -161,12 +164,33 @@ export const githubCallback = async (req, res) => {
     };
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
-    const data = await fetch(finalUrl, {
-        method: "POST",
-        headers: {
-            Accept: "application/json",
-        },
-    });
-    const json = await data.json();
-    console.log(json);
+    const token = await (
+        await fetch(finalUrl, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+            },
+        })
+    ).json();
+    if (token.access_token) {
+        const { access_token } = token;
+        const apiUrl = "https://api.github.com";
+        const userData = await (
+            await fetch(`${apiUrl}/user`, {
+                headers: {
+                    Authorization: `token ${access_token}`,
+                },
+            })
+        ).json();
+        const emailData = await (
+            await fetch(`${apiUrl}/user/emails`, {
+                headers: {
+                    Authorization: `token ${access_token}`,
+                },
+            })
+        ).json();
+        const email = emailData.find((email) => email.primary === true && email.verified === true);
+        console.log(userData, email);
+        if (!email) res.redirect("/login");
+    } else return res.redirect("/login");
 };
