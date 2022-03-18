@@ -187,8 +187,27 @@ export const githubCallback = async (req, res) => {
                 },
             })
         ).json();
-        const email = emailData.find((email) => email.primary === true && email.verified === true);
-        console.log(userData, email);
-        if (!email) res.redirect("/login");
-    } else return res.redirect("/login");
+        const emailObj = emailData.find((email) => email.primary === true && email.verified === true);
+        console.log(userData, emailObj);
+        if (!emailObj) {
+            return res.redirect("/login");
+        }
+        const existingUser = await User.findOne({ email: emailObj.email });
+        if (existingUser) {
+            return res.redirect("/login");
+        } else {
+            const user = await User.create({
+                socialLogin: true,
+                name: userData.name,
+                username: userData.login,
+                email: emailObj.email,
+                password: "GITHUB_SIGNIN",
+                location: userData.location,
+            });
+            req.session.loggedIn = true;
+            req.session.user = user;
+        }
+    } else {
+        return res.redirect("/login");
+    }
 };

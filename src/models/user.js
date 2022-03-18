@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     email: { type: String, required: true, unique: true },
+    socialLogin: { type: Boolean, required: false },
     avatarUrl: { type: String, required: false },
-    socialOnly: { type: Boolean, default: false },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
