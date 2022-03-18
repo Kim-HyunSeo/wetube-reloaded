@@ -202,7 +202,7 @@ export const githubCallback = async (req, res) => {
                 name: userData.name,
                 username: userData.login,
                 email: emailObj.email,
-                password: "GITHUB_SIGNIN",
+                password: "",
                 location: userData.location,
             });
         }

@@ -7,7 +7,7 @@ const UserSchema = new Schema({
     socialLogin: { type: Boolean, required: false },
     avatarUrl: { type: String, required: false },
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
     name: { type: String, required: true },
     location: { type: String, required: false },
     videos: [
