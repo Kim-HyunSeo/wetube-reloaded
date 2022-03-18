@@ -48,7 +48,7 @@ export const getLogin = (req, res) => res.render("login", { pageTitle: "Login" }
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login";
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username, socialOnly: false });
     if (!user) {
         return res.status(400).render("login", {
             pageTitle: "Login",
@@ -66,7 +66,10 @@ export const postLogin = async (req, res) => {
     req.session.user = user;
     return res.redirect("/login");
 };
-export const logout = (req, res) => {};
+export const logout = (req, res) => {
+    req.session.destroy();
+    return res.redirect("/");
+};
 
 export const getEdit = (req, res) => {
     return res.render("edit-profile", {
@@ -192,11 +195,9 @@ export const githubCallback = async (req, res) => {
         if (!emailObj) {
             return res.redirect("/login");
         }
-        const existingUser = await User.findOne({ email: emailObj.email });
-        if (existingUser) {
-            return res.redirect("/login");
-        } else {
-            const user = await User.create({
+        let user = await User.findOne({ email: emailObj.email });
+        if (!user) {
+            user = await User.create({
                 socialLogin: true,
                 name: userData.name,
                 username: userData.login,
@@ -204,9 +205,10 @@ export const githubCallback = async (req, res) => {
                 password: "GITHUB_SIGNIN",
                 location: userData.location,
             });
-            req.session.loggedIn = true;
-            req.session.user = user;
         }
+        req.session.loggedIn = true;
+        req.session.user = user;
+        return res.redirect("/");
     } else {
         return res.redirect("/login");
     }
